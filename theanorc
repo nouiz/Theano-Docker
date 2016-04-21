@@ -1,0 +1,11 @@
+[global]
+device=gpu
+floatX=float32
+
+[lib]
+cnmem=1
+
+[dnn]
+# If the following line is uncommented, Theano will raise an error if
+#it can't use cuDNN.
+enabled=True
