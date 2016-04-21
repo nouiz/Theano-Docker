@@ -1,3 +1,4 @@
+# Inspired from https://github.com/jupyter/docker-stacks/tree/master/minimal-notebook
 FROM nvidia/cuda:7.5-cudnn4-runtime
 
 RUN apt-get update && apt-get install -y \
@@ -31,6 +32,7 @@ RUN pip install git+git://github.com/Theano/Theano.git@0.8.X
 COPY notebook /notebook
 
 COPY start-notebook.sh /
+COPY jupyter_notebook_config.py /home/.root/.jupyter/
 
 EXPOSE 8888
 

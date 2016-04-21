@@ -1,1 +1,2 @@
-exec jupyter notebook $*
+#!/usr/bin/env bash
+jupyter notebook "$@"
