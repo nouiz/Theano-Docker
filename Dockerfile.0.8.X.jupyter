@@ -3,8 +3,9 @@ FROM jupyter/minimal-notebook
 USER root
 
 RUN apt-get update && apt-get install -y \
-    g++ \
-    git \
+        libopenblas-dev \
+        g++ \
+        git \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*

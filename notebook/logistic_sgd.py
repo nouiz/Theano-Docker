@@ -368,7 +368,7 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
     epoch = 0
     while (epoch < n_epochs) and (not done_looping):
         epoch = epoch + 1
-        for minibatch_index in xrange(n_train_batches):
+        for minibatch_index in range(n_train_batches):
 
             minibatch_avg_cost = train_model(minibatch_index)
             # iteration number
@@ -377,7 +377,7 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
             if (iter + 1) % validation_frequency == 0:
                 # compute zero-one loss on validation set
                 validation_losses = [validate_model(i)
-                                     for i in xrange(n_valid_batches)]
+                                     for i in range(n_valid_batches)]
                 this_validation_loss = numpy.mean(validation_losses)
 
                 print(
@@ -401,7 +401,7 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
                     # test it on the test set
 
                     test_losses = [test_model(i)
-                                   for i in xrange(n_test_batches)]
+                                   for i in range(n_test_batches)]
                     test_score = numpy.mean(test_losses)
 
                     print(
