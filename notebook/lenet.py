@@ -157,7 +157,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     ######################
     # BUILD ACTUAL MODEL #
     ######################
-    print '... building the model'
+    print('... building the model')
 
     # Reshape matrix of rasterized images of shape (batch_size, 28 * 28)
     # to a 4D tensor, compatible with our LeNetConvPoolLayer
@@ -258,7 +258,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     ###############
     # TRAIN MODEL #
     ###############
-    print '... training'
+    print('... training')
     # early-stopping parameters
     patience = 10000  # look as this many examples regardless
     patience_increase = 2  # wait this much longer when a new best is
@@ -286,7 +286,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
             iter = (epoch - 1) * n_train_batches + minibatch_index
 
             if iter % 100 == 0:
-                print 'training @ iter = ', iter
+                print('training @ iter = ', iter)
             cost_ij = train_model(minibatch_index)
 
             if (iter + 1) % validation_frequency == 0:
@@ -331,8 +331,8 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     print('Best validation score of %f %% obtained at iteration %i, '
           'with test performance %f %%' %
           (best_validation_loss * 100., best_iter + 1, test_score * 100.))
-    print >> sys.stderr, ('The code ran for %.2fm' %
-                          ((end_time - start_time) / 60.))
+    print('The code ran for %.2fm' %
+          ((end_time - start_time) / 60.), file=sys.stderr)
 
     # Call Python GC to make sure the GPU memory is freed. That way,
     # we are sure next call will have enough memory.
