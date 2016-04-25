@@ -1,5 +1,5 @@
 # Heavily Inspired from https://github.com/jupyter/docker-stacks/tree/master/minimal-notebook
-FROM nvidia/cuda:7.5-cudnn4-runtime
+FROM nvidia/cuda:7.5-cudnn4-devel
 #FROM jupyter/minimal-notebook
 # Debian Jessie image released 2016 March 01.
 #FROM debian@sha256:a9c958be96d7d40df920e7041608f2f017af81800ca5ad23e327bc402626b58e
