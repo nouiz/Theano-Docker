@@ -3,7 +3,7 @@ device=gpu
 floatX=float32
 
 [lib]
-cnmem=1
+cnmem=0.9
 
 [dnn]
 # If the following line is uncommented, Theano will raise an error if

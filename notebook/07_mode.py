@@ -1,5 +1,5 @@
 import numpy as np
-from theano import function
+from theano import function, Mode
 from theano import tensor as T
 from theano import config
 
@@ -12,5 +12,5 @@ f = b * c * d
 # This is the first bad line
 g = e + f
 h = g / c
-fn = function([a], h, mode='FAST_COMPILE')
+fn = function([a], h, mode=Mode(optimizer='None'))
 fn(np.ones((3,)).astype(a.dtype))
