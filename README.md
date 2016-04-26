@@ -11,11 +11,14 @@ To build the Docker:
 Start it while allowing UNSECUR remote connection:
 
     nvidia-docker run -d -p 8888:8888 theano start-notebook.sh
+    # Then open your browser at http://HOST:8888
 
 Start it while allowing remote connection with a little bit of security:
 
     nvidia-docker run -d -p 8888:8888  -e PASSWORD="123abcChangeThis" theano start-notebook.sh
+    # Then open your browser at http://HOST:8888
 
-Start it while allowing more secur remote connection (Don't work yet):
+Start it while allowing more secur remote connection:
 
     nvidia-docker run -d -p 8888:8888  -e PASSWORD="123abcChangeThis" -e USE_HTTPS=yes theano start-notebook.sh
+    # Then open your browser at https://HOST:8888
