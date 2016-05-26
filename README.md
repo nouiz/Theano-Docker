@@ -8,8 +8,8 @@ There is 2 docker files. One simple and one with more security enabled.
 
 To build the Docker:
 
-    docker build -t theano_secure -f  Dockerfile.0.8.X.jupyter.cuda.simple .  # simple version
-    docker build -t theano_simple -f  Dockerfile.0.8.X.jupyter.cuda .  # more secure version
+    docker build -t theano_simple -f  Dockerfile.0.8.X.jupyter.cuda.simple .  # simple version
+    docker build -t theano_secure -f  Dockerfile.0.8.X.jupyter.cuda.secure .  # more secure version
 
 Start the simple one while allowing UNSECURE remote connection:
 
