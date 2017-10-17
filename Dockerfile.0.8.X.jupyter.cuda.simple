@@ -1,3 +1,6 @@
+# WARNING: this Dockerfile is no longer supported and might not build with
+# the latest pip packages
+
 FROM nvidia/cuda:7.5-cudnn5-devel
 
 MAINTAINER FIX ME <fixme@example.com>
