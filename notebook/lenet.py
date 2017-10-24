@@ -29,8 +29,8 @@ import numpy
 
 import theano
 import theano.tensor as T
-from theano.tensor.signal import downsample
-from theano.tensor.nnet import conv
+from theano.tensor.signal import pool
+from theano.tensor.nnet import conv2d
 
 from logistic_sgd import LogisticRegression, load_data
 from mlp import HiddenLayer
@@ -39,7 +39,7 @@ from mlp import HiddenLayer
 class LeNetConvPoolLayer(object):
     """Pool Layer of a convolutional network """
 
-    def __init__(self, rng, input, filter_shape, image_shape, poolsize=(2, 2)):
+    def __init__(self, rng, input, filter_shape, input_shape, poolsize=(2, 2)):
         """
         Allocate a LeNetConvPoolLayer with shared variable internal parameters.
 
@@ -47,21 +47,20 @@ class LeNetConvPoolLayer(object):
         :param rng: a random number generator used to initialize weights
 
         :type input: theano.tensor.dtensor4
-        :param input: symbolic image tensor, of shape image_shape
-
+        :param input: symbolic image tensor, of shape input_shape
         :type filter_shape: tuple or list of length 4
         :param filter_shape: (number of filters, num input feature maps,
                               filter height, filter width)
 
-        :type image_shape: tuple or list of length 4
-        :param image_shape: (batch size, num input feature maps,
+        :type input_shape: tuple or list of length 4
+        :param input_shape: (batch size, num input feature maps,
                              image height, image width)
 
         :type poolsize: tuple or list of length 2
         :param poolsize: the downsampling (pooling) factor (#rows, #cols)
         """
 
-        assert image_shape[1] == filter_shape[1]
+        assert input_shape[1] == filter_shape[1]
         self.input = input
 
         # there are "num input feature maps * filter height * filter width"
@@ -87,17 +86,17 @@ class LeNetConvPoolLayer(object):
         self.b = theano.shared(value=b_values, borrow=True)
 
         # convolve input feature maps with filters
-        conv_out = conv.conv2d(
+        conv_out = conv2d(
             input=input,
             filters=self.W,
             filter_shape=filter_shape,
-            image_shape=image_shape
+            input_shape=input_shape
         )
 
         # downsample each feature map individually, using maxpooling
-        pooled_out = downsample.max_pool_2d(
+        pooled_out = pool.pool_2d(
             input=conv_out,
-            ds=poolsize,
+            ws=poolsize,
             ignore_border=True
         )
 
@@ -171,7 +170,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     layer0 = LeNetConvPoolLayer(
         rng,
         input=layer0_input,
-        image_shape=(batch_size, 1, 28, 28),
+        input_shape=(batch_size, 1, 28, 28),
         filter_shape=(nkerns[0], 1, 5, 5),
         poolsize=(2, 2)
     )
@@ -183,7 +182,7 @@ def evaluate_lenet5(learning_rate=0.1, n_epochs=200,
     layer1 = LeNetConvPoolLayer(
         rng,
         input=layer0.output,
-        image_shape=(batch_size, nkerns[0], 12, 12),
+        input_shape=(batch_size, nkerns[0], 12, 12),
         filter_shape=(nkerns[1], nkerns[0], 5, 5),
         poolsize=(2, 2)
     )

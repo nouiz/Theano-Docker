@@ -1,5 +1,5 @@
 [global]
-device=gpu
+device=cuda
 floatX=float32
 
 [lib]

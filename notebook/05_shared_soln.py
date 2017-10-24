@@ -1,5 +1,5 @@
 import numpy as np
-from theano.compat.python2x import OrderedDict
+from collections import OrderedDict
 from theano import function
 from theano import shared
 

@@ -1,12 +1,9 @@
 # Heavily Inspired from https://github.com/jupyter/docker-stacks/tree/master/minimal-notebook
-FROM nvidia/cuda:7.5-cudnn5-devel
-#FROM jupyter/minimal-notebook
-# Debian Jessie image released 2016 March 01.
-#FROM debian@sha256:a9c958be96d7d40df920e7041608f2f017af81800ca5ad23e327bc402626b58e
+FROM nvidia/cuda:8.0-cudnn5-devel
 
-ENV THEANO_VERSION 0.8.2
-LABEL com.nvidia.theano.version="0.8.2"
-
+ENV THEANO_VERSION 0.9.0
+LABEL com.nvidia.theano.version="0.9.0"
+ENV PYGPU_VERSION 0.6.9
 
 USER root
 
@@ -69,19 +66,23 @@ RUN mkdir /home/$NB_USER/work && \
     echo "cacert=/etc/ssl/certs/ca-certificates.crt" > /home/$NB_USER/.curlrc
 
 # Install conda as jovyan
+ENV CONDA_VER 4.3.21
+ENV CONDA_MD5 c1c15d3baba15bf50293ae963abef853
 RUN cd /tmp && \
     mkdir -p $CONDA_DIR && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-3.19.0-Linux-x86_64.sh && \
-    echo "9ea57c0fdf481acf89d816184f969b04bc44dea27b258c4e86b1e3a25ff26aa0 *Miniconda3-3.19.0-Linux-x86_64.sh" | sha256sum -c - && \
-    /bin/bash Miniconda3-3.19.0-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda3-3.19.0-Linux-x86_64.sh && \
-    $CONDA_DIR/bin/conda install --quiet --yes conda==3.19.1 && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${CONDA_VER}-Linux-x86_64.sh && \
+    echo "$CONDA_MD5 *Miniconda3-${CONDA_VER}-Linux-x86_64.sh" | md5sum -c - && \
+    /bin/bash Miniconda3-${CONDA_VER}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda3-${CONDA_VER}-Linux-x86_64.sh && \
+    $CONDA_DIR/bin/conda install --quiet --yes conda==${CONDA_VER} && \
+    conda config --set auto_update_conda False && \
     conda clean -tipsy
 
 # Install Jupyter notebook as jovyan
 RUN conda install --quiet --yes \
-    'notebook=4.1*' \
+    'notebook=5.0*' \
     terminado \
+    mkl-service \
     && conda clean -tipsy
 
 USER root
@@ -90,7 +91,6 @@ USER root
 EXPOSE 8888
 WORKDIR /home/$NB_USER/work
 ENTRYPOINT ["tini", "--"]
-CMD ["start-notebook.sh"]
 
 # Add local files as late as possible to avoid cache busting
 # Start notebook server
@@ -111,8 +111,12 @@ RUN apt-get update && apt-get install -y \
 RUN pip install git+git://github.com/Theano/Theano.git@rel-$THEANO_VERSION
 COPY theanorc /home/$NB_USER/.theanorc
 
+RUN conda install -y pygpu=$PYGPU_VERSION
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER jovyan
 
 COPY notebook notebook
 RUN mkdir data && cd data && wget http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist_py3k.pkl.gz -O mnist.pkl.gz
+
+CMD ["start-notebook.sh", "notebook"]
