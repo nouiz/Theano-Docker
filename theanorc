@@ -2,10 +2,10 @@
 device=cuda
 floatX=float32
 
-[lib]
-cnmem=0.9
+[gpuarray]
+preallocate=0.9
 
 [dnn]
 # If the following line is uncommented, Theano will raise an error if
-#it can't use cuDNN.
+# it can't use cuDNN.
 enabled=True
