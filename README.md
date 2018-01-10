@@ -4,7 +4,7 @@ This repository contains Docker files for Theano running inside a Jupyter notebo
 
 To build the Docker:
 ```
-docker build -t theano_secure -f  Dockerfile.0.9.X.jupyter.cuda.secure .
+docker build -t theano_secure .
 ```
 
 To start the Docker:
