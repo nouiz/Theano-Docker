@@ -95,8 +95,9 @@ ENTRYPOINT ["tini", "--"]
 # Add local files as late as possible to avoid cache busting
 # Start notebook server
 COPY start-notebook.sh /usr/local/bin/
+RUN chmod 755 /usr/local/bin/start-notebook.sh
 COPY jupyter_notebook_config_secure.py /home/$NB_USER/.jupyter/jupyter_notebook_config.py
-RUN chown -R $NB_USER:users /home/$NB_USER/.jupyter
+COPY notebook /home/$NB_USER/work/notebook
 
 # My own change
 
@@ -113,10 +114,12 @@ COPY theanorc /home/$NB_USER/.theanorc
 
 RUN conda install -c mila-udem -y pygpu=$PYGPU_VERSION
 
+# Make sure user jovyan owns files in HOME
+RUN chown -R $NB_USER:users /home/$NB_USER
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER jovyan
 
-COPY notebook notebook
 RUN mkdir data && cd data && wget http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist_py3k.pkl.gz -O mnist.pkl.gz
 
 CMD ["start-notebook.sh", "notebook"]
