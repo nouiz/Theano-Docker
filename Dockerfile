@@ -1,8 +1,8 @@
 # Heavily Inspired from https://github.com/jupyter/docker-stacks/tree/master/minimal-notebook
-FROM nvidia/cuda:9.0-cudnn7-devel
+FROM nvidia/cuda:9.1-cudnn7-devel
 
-ENV THEANO_VERSION 1.0.0
-LABEL com.nvidia.theano.version="1.0.0"
+ENV THEANO_VERSION 1.0.1
+LABEL com.nvidia.theano.version="1.0.1"
 ENV PYGPU_VERSION 0.7.5
 
 USER root
