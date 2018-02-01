@@ -1,8 +1,8 @@
 # Heavily Inspired from https://github.com/jupyter/docker-stacks/tree/master/minimal-notebook
 FROM nvidia/cuda:9.0-cudnn7-devel
 
-ENV THEANO_VERSION 1.0.0
-LABEL com.nvidia.theano.version="1.0.0"
+ENV THEANO_VERSION 1.0.1
+LABEL com.nvidia.theano.version="1.0.1"
 ENV PYGPU_VERSION 0.7.5
 
 USER root
@@ -66,8 +66,8 @@ RUN mkdir /home/$NB_USER/work && \
     echo "cacert=/etc/ssl/certs/ca-certificates.crt" > /home/$NB_USER/.curlrc
 
 # Install conda as jovyan
-ENV CONDA_VER 4.3.21
-ENV CONDA_MD5 c1c15d3baba15bf50293ae963abef853
+ENV CONDA_VER 4.3.31
+ENV CONDA_MD5 7fe70b214bee1143e3e3f0467b71453c
 RUN cd /tmp && \
     mkdir -p $CONDA_DIR && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${CONDA_VER}-Linux-x86_64.sh && \
@@ -84,6 +84,10 @@ RUN conda install --quiet --yes \
     terminado \
     mkl-service \
     && conda clean -tipsy
+
+# Install Theano, pygpu
+RUN conda install -c mila-udem -y Theano=$THEANO_VERSION pygpu=$PYGPU_VERSION
+ENV MKL_THREADING_LAYER GNU
 
 USER root
 
@@ -102,17 +106,12 @@ COPY notebook /home/$NB_USER/work/notebook
 # My own change
 
 RUN apt-get update && apt-get install -y \
-        libopenblas-dev \
         g++ \
-        git \
     && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install git+git://github.com/Theano/Theano.git@rel-$THEANO_VERSION
 COPY theanorc /home/$NB_USER/.theanorc
-
-RUN conda install -c mila-udem -y pygpu=$PYGPU_VERSION
 
 # Make sure user jovyan owns files in HOME
 RUN chown -R $NB_USER:users /home/$NB_USER
